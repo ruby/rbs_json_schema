@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH << File.join(__dir__, "../lib")
+require "rbs_json_schema"
+require "rbs_json_schema/cli"
+
+RBSJsonSchema::CLI.new(stdout: STDOUT, stderr: STDERR).run(ARGV)
