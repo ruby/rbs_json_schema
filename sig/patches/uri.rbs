@@ -1,0 +1,8 @@
+module URI
+  class Generic
+    def fragment=: (String?) -> String?
+                 | ...
+
+    def +: (URI::Generic other) -> URI::Generic
+  end
+end

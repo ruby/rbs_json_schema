@@ -231,12 +231,12 @@ module RBSJsonSchema
 
       dup_uri.fragment = uri.fragment # Re-assign fragment
       # Check if fragment exists for that URI
-      if dup_uri.fragment
+      if fragment = dup_uri.fragment
         # If it is an empty fragment, i.e, `#` then return the original schema
-        return schema if dup_uri.fragment.empty?
+        return schema if fragment.empty?
 
-        dup_uri.fragment.slice!(0) if dup_uri.fragment.chr == "/" # Remove initial slash to avoid empty entries while splitting
-        dig_arr = dup_uri.fragment.split("/") # Split the fragment string on `/` e.g, #/definitions/member => [definitions, member]
+        fragment.slice!(0) if fragment.start_with?("/") # Remove initial slash to avoid empty entries while splitting
+        dig_arr = fragment.split("/") # Split the fragment string on `/` e.g, #/definitions/member => [definitions, member]
         # Scan hash for the required key & if found return the corresponding schema document
         if (json_schema = __skip__ = schema.dig(*dig_arr))
           return json_schema
@@ -283,9 +283,12 @@ module RBSJsonSchema
       end
 
       name = :t
-      if dup_uri.fragment && !dup_uri.fragment.empty?
-        dup_uri.fragment.slice!(0) if dup_uri.fragment.chr == "/" # Remove initial slash if present in fragment
-        name = dup_uri.fragment.downcase.split("/").join("_") # Build a type alias compatible name
+
+      if fragment = dup_uri.fragment
+        unless fragment.empty?
+          fragment[0] = "" if fragment.start_with?("/") # Remove initial slash if present in fragment
+          name = fragment.downcase.tr("/", "_")
+        end
       end
 
       # Return type name for type alias
