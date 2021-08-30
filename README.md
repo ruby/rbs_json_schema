@@ -1,8 +1,7 @@
-# RbsJsonSchema
+# rbs_json_schema
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/rbs_json_schema`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+rbs_json_schema is a RBS type definition generator from JSON Schema.
+It loads JSON files and writes RBS type definitioins.
 
 ## Installation
 
@@ -22,7 +21,11 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Execute `rbs_json_schema` command with JSON schema files.
+
+```
+$ bundle exec rbs_json_schema schemas/address.json
+```
 
 ## Development
 
@@ -30,9 +33,13 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
+## Acknowledgement
+
+This software is based on the work of Sushanth Sathesh Rao (@raosush) with the support from Google Summer of Code 2021.
+
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/rbs_json_schema.
+Bug reports and pull requests are welcome on GitHub at https://github.com/ruby/rbs_json_schema.
 
 
 ## License
