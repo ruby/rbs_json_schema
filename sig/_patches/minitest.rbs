@@ -1,0 +1,9 @@
+module Minitest
+  class Test
+    def assert_equal: (untyped, untyped) -> void
+
+    def assert: (boolish) -> void
+
+    def assert_raises: (singleton(Exception)) { () -> void } -> Exception
+  end
+end

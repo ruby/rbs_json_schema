@@ -1,0 +1,12 @@
+class CLITest < Minitest::Test
+  RBS_PATH: Pathname
+  SCHEMA_PATH: Pathname
+
+  attr_reader stdout (): StringIO
+
+  attr_reader stderr (): StringIO
+
+  def with_cli: () { (RBSJsonSchema::CLI) -> void } -> void
+
+  
+end

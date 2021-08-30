@@ -6,7 +6,7 @@ class CLITest < Minitest::Test
   include RBSJsonSchema
 
   RBS_PATH = Pathname(Gem::Specification.find_by_name("rbs", RBS::VERSION).gem_dir).realpath
-  SCHAME_PATH = RBS_PATH + "schema"
+  SCHEMA_PATH = RBS_PATH + "schema"
 
   def stdout
     @stdout ||= StringIO.new
