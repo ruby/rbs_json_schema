@@ -13,6 +13,14 @@ module RBSJsonSchema
 
     def run(args)
       OptionParser.new do |opts|
+        opts.banner = <<~USAGE
+        Usage: rbs_json_schema [options...] [path...]
+
+        Generates RBS files from JSON Schema.
+
+        Options:
+        USAGE
+
         opts.on("--[no-]stringify-keys", "Generate record types with string keys") do |bool|
           @options[:stringify_keys] = bool
         end
@@ -35,9 +43,7 @@ module RBSJsonSchema
         when path.file?
           generator.generate(URI.parse("file://#{path}"))
         when path.directory?
-          # Iterate over all JSON files present in the directory
-          ## Ruby 3.0+ returns files in a sorted order & provides an option to obtain sorted result ##
-          (RUBY_VERSION >= '3.0' ? Dir["#{path}/*.{json}", sort: true] : Dir["#{path}/*.{json}"].sort).each do |file|
+          Dir["#{path}/*.{json}"].sort.each do |file|
             file = Pathname(file).realpath
             generator.generate(URI.parse("file://#{file}"))
           end

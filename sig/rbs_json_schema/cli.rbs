@@ -12,6 +12,8 @@ module RBSJsonSchema
 
     attr_reader stderr: _IO
 
+    @options: Hash[Symbol, untyped]
+
     def initialize: (stdout: _IO, stderr: _IO) -> void
 
     def run: (Array[String] args) -> void
