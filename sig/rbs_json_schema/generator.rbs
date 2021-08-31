@@ -37,6 +37,15 @@ module RBSJsonSchema
 
     def translate_type: (URI::Generic uri, json_schema schema) -> RBS::Types::t
 
+    # Returns JSON Schema object from given URI.
+    #
+    # ```rb
+    # generator.read_from_uri(URI.parse("file://./foo.json"))
+    # generator.read_from_uri(URI.parse("http://localhost/schemas/foo#/$defs/bar"))
+    # ```
+    #
+    # Reading from URI with `file` schema and `http` schema is supported.
+    #
     def read_from_uri: (URI::Generic uri) -> json_schema
 
     def write_output: () -> void

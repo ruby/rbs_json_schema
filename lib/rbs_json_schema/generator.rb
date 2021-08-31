@@ -200,51 +200,32 @@ module RBSJsonSchema
 
     # Read contents from a URI
     def read_from_uri(uri)
-      # Initial value
-      schema = nil
-      dup_uri = uri.dup # Duplicate the URI for processing
-      dup_uri.fragment = nil # Remove fragment for reading from URI
-
-      case uri.scheme
-      # File (or) Generic implies a local file
-      when "file", nil
-        # Read local file using `File` module
-        schema = File.read(uri.path)
-      # HTTP/HTTPS implies a remote file
-      when "http", "https"
-        # Read remote file using Net::HTTP
-        schema = Net::HTTP.get(dup_uri)
-      # Unsupported URI scheme
-      else
-        raise ValidationError.new(message: "Could not read content from URI: #{uri}")
-      end
-
-      begin
-        # Obtain schema in RUBY's Hash data structure by parsing file content
-        schema = JSON.parse(schema)
-      rescue JSON::ParserError, TypeError => e
-        # Print error message for invalid JSON content
-        raise ValidationError.new(message: "Invalid JSON content!\n#{e.full_message}")
-      end
-
-      dup_uri.fragment = uri.fragment # Re-assign fragment
-      # Check if fragment exists for that URI
-      if fragment = dup_uri.fragment
-        # If it is an empty fragment, i.e, `#` then return the original schema
-        return schema if fragment.empty?
-
-        fragment.slice!(0) if fragment.start_with?("/") # Remove initial slash to avoid empty entries while splitting
-        dig_arr = fragment.split("/") # Split the fragment string on `/` e.g, #/definitions/member => [definitions, member]
-        # Scan hash for the required key & if found return the corresponding schema document
-        if (json_schema = __skip__ = schema.dig(*dig_arr))
-          return json_schema
-        # If key not found, raise an error
+      schema_source =
+        case uri.scheme
+        when "file", nil
+          File.read(uri.path)
+        when "http", "https"
+          Net::HTTP.get(uri)
         else
-          raise ValidationError.new(message: "Could not find schema defined for: ##{uri.fragment}")
+          raise ValidationError.new(message: "Could not read content from URI: #{uri}")
         end
-      end
 
-      schema
+      schema = JSON.parse(schema_source)
+
+      if (fragment = uri.fragment) && !fragment.empty?
+        case
+        when fragment.start_with?("/")
+          path = fragment.split("/")
+          path.shift()
+
+          schema.dig(*path) or
+            raise ValidationError.new(message: "JSON pointer doesn't point a schema: #{uri.fragment}")
+        else
+          raise ValidationError.new(message: "JSON pointer is expected: #{uri.fragment}")
+        end
+      else
+        schema
+      end
     end
 
     # Write output using `RBS::Writer` to a particular `IO`

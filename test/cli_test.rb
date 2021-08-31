@@ -191,8 +191,7 @@ Writing output to file: #{dir}/location.rbs
     end
 
     with_cli do |cli|
-      err = assert_raises(ValidationError) { cli.run(%W(./lib/rbs.rb)) }
-      assert_equal "Invalid JSON content!", err.message.split("\n").first
+      assert_raises(JSON::ParserError) { cli.run(%W(./lib/rbs.rb)) }
     end
   end
 end

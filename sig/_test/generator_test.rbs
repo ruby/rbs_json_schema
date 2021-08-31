@@ -1,0 +1,13 @@
+class GeneratorTest < Minitest::Test
+  include RBSJsonSchema
+
+  attr_reader output (): String
+
+  attr_reader stdout (): StringIO
+
+  attr_reader stderr (): StringIO
+
+  def in_tmpdir: () { (Pathname) -> void } -> void
+
+  def generator: () -> RBSJsonSchema::Generator
+end
