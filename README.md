@@ -35,7 +35,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Acknowledgement
 
-This software is based on the work of Sushanth Sathesh Rao (@raosush) with the support from Google Summer of Code 2021.
+This software is based on the work of Sushanth Sathesh Rao ([@raosush](https://github.com/raosush)) with the support from Google Summer of Code 2021.
 
 ## Contributing
 
