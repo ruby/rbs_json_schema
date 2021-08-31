@@ -1,0 +1,33 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request: {}
+
+jobs:
+  test:
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        container_tag:
+        - master-nightly-focal
+        - 3.0-focal
+        - 2.7-bionic
+        job:
+        - test
+    container:
+      image: rubylang/ruby:${{ matrix.container_tag }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Update rubygems & bundler
+      run: |
+        ruby -v
+        gem update --system
+    - name: bin/setup
+      run: |
+        bin/setup
+    - name: Run test
+      run: |
+        bundle exec rake ${{ matrix.job }}
