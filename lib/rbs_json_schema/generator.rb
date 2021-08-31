@@ -130,14 +130,12 @@ module RBSJsonSchema
       when schema["type"] == "object" || schema.key?("properties") || schema.key?("additionalProperties")
         case
         when properties = schema["properties"]
+          # @type var properties: json_schema
           fields = properties.each.with_object({}) do |pair, hash|
+            # @type var hash: Hash[Symbol, RBS::Types::t]
             key, value = pair
 
-            unless stringify_keys
-              key = key.to_sym
-            end
-
-            hash[key] = translate_type(uri, value)
+            hash[key.to_sym] = translate_type(uri, value)
           end
 
           RBS::Types::Record.new(fields: fields, location: nil)
