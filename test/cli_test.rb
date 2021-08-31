@@ -124,14 +124,14 @@ module Comment
   type t = definitions_comment | nil
 end
 
-module Methodtype
+module MethodType
   type definitions_block = { :type => Function::t, required: bool }
 
   type t = { type_params: ::Array[::String], :type => Function::t, block: definitions_block | nil, location: Location::t }
 end
 
 module Members
-  type definitions_methoddefinition = { member: "method_definition", kind: "instance" | "singleton" | "singleton_instance", types: ::Array[Methodtype::t], comment: Comment::t, annotations: ::Array[Annotation::t], attributes: ::Array["incompatible"], location: Location::t, :overload => bool }
+  type definitions_methoddefinition = { member: "method_definition", kind: "instance" | "singleton" | "singleton_instance", types: ::Array[MethodType::t], comment: Comment::t, annotations: ::Array[Annotation::t], attributes: ::Array["incompatible"], location: Location::t, :overload => bool }
 
   type definitions_variable = { member: "instance_variable" | "class_instance_variable" | "class_variable", name: ::String, :type => Types::t, location: Location::t, comment: Comment::t }
 

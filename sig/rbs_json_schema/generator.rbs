@@ -53,10 +53,6 @@ module RBSJsonSchema
 
     def resolve_uri: (URI::Generic uri, URI::Generic ref_uri) -> URI::Generic
 
-    def snake_case: (String `string`) -> String
-
-    def camel_case: (String `string`) -> String
-
     def validate_options: () -> void
   end
 end

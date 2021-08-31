@@ -252,7 +252,7 @@ module RBSJsonSchema
       # If an output directory is given, open a file & write to it
       if output = self.output
         @path_decls.each do |path, decls|
-          name = snake_case(decls.name.name.to_s.dup)
+          name = decls.name.name.to_s.underscore
           file_path = File.join(output, "#{name}.rbs")
           File.open(file_path, 'w') do |io|
             stdout.puts "Writing output to file: #{file_path}"
@@ -270,7 +270,7 @@ module RBSJsonSchema
       dup_uri = uri.dup # Duplicate URI object for processing
       path = dup_uri.path.split("/").last or raise # Extract path
       path.gsub!(/(.json$)?/, '') # Remove JSON file extension if found
-      prefix = camel_case(path) # prefix is used to write module name, hence converted to camel case
+      prefix = path.camelize # prefix is used to write module name, hence converted to camel case
 
       # Return module_name
       if module_name
@@ -313,24 +313,6 @@ module RBSJsonSchema
         # Raise error in case of invalid URI
         raise ValidationError.new(message: "Could not resolve URI: #{uri} + #{ref_uri}")
       end
-    end
-
-    # Utility function to convert a string to snake_case
-    # Implementation derived from ActiveSupport::Inflector#parameterize method
-    private def snake_case(string)
-      string.gsub!(/[^a-z0-9_]+/i, '_')
-      string.gsub!(/_{2,}/, '_')
-      string.gsub!(/^_|_$/i, '')
-      string.downcase!
-      string
-    end
-
-    # Utility function to convert a string to camel_case
-    # Implementation derived from ActiveSupport::Inflector#camelize method
-    private def camel_case(string)
-      string = snake_case(string).sub(/^[a-z\d]*/) { |match| match.capitalize }
-      string.gsub!(/(.*?)_([a-zA-Z])/) { "#{$1}#{$2.capitalize}" }
-      string
     end
 
     # Validate options given to the CLI
