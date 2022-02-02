@@ -195,7 +195,7 @@ module RBSJsonSchema
         # Assign alias type with appropriate namespace
         RBS::Types::Alias.new(
           name: generate_type_name_for_uri(resolved_uri, namespace: resolved_uri.path != uri.path),
-          args: []
+          args: [],
           location: nil
         )
       else
