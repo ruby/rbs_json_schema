@@ -26,7 +26,7 @@ module RBSJsonSchema
 
       @path_decls[uri.path] ||= RBS::AST::Declarations::Module.new(
         name: generate_type_name_for_uri(uri, module_name: true),
-        type_params: RBS::AST::Declarations::ModuleTypeParams.empty,
+        type_params: [],
         members: [],
         self_types: [],
         annotations: [],
@@ -40,13 +40,13 @@ module RBSJsonSchema
     def generate_rbs(uri, document)
       # If schema is already generated for a URI, do not re-generate declarations/types
       if fragment = uri.fragment
-        # return if fragment.empty? # If fragment is empty, implies top level schema which is always generated since it is the starting point of the algorithm
-
-        if @generated_schemas.dig(uri.path, fragment.empty? ? "#" : fragment) # Check if types have been generated for a particular path & fragment
+        # Check if types have been generated for a particular path & fragment
+        if @generated_schemas.dig(uri.path, fragment.empty? ? "#" : fragment)
           return
         end
       else
-        if @generated_schemas.dig(uri.path, "#") # Check if types have been generated for a particular path
+        # Check if types have been generated for a particular path
+        if @generated_schemas.dig(uri.path, "#")
           return
         end
       end
@@ -61,21 +61,24 @@ module RBSJsonSchema
       else
         @generated_schemas[uri.path]["#"] = true
       end
+
       # Parse & generate declarations from remaining schema content
       decl = Alias.new(
         name: generate_type_name_for_uri(uri), # Normal type name with no prefix
         type: translate_type(uri, document), # Obtain type of alias by parsing the schema document
+        type_params: [],
         annotations: [],
         location: nil,
         comment: nil
       )
+
       # Append the declaration if & only if the declaration has a valid RBS::Type assigned
       if @path_decls[uri.path]
         @path_decls[uri.path].members << decl if !decl.type.nil?
       else
         @path_decls[uri.path] = RBS::AST::Declarations::Module.new(
           name: generate_type_name_for_uri(uri, module_name: true),
-          type_params: RBS::AST::Declarations::ModuleTypeParams.empty,
+          type_params: [],
           members: [],
           self_types: [],
           annotations: [],
@@ -184,13 +187,15 @@ module RBSJsonSchema
             raise ValidationError.new(message: "Invalid URI encountered in: $ref = #{ref}")
           end
 
-        resolved_uri = resolve_uri(uri, ref_uri) # Resolve `$ref` URI with respect to current URI
+        # Resolve `$ref` URI with respect to current URI
+        resolved_uri = resolve_uri(uri, ref_uri)
         # Generate AST::Declarations::Alias
         generate_rbs(resolved_uri, read_from_uri(resolved_uri))
 
         # Assign alias type with appropriate namespace
         RBS::Types::Alias.new(
           name: generate_type_name_for_uri(resolved_uri, namespace: resolved_uri.path != uri.path),
+          args: []
           location: nil
         )
       else
