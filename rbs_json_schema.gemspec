@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Generate RBS type definitions from JSON Schema}
   spec.homepage      = "https://github.com/ruby/rbs_json_schema"
   spec.license       = "MIT"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
+  spec.required_ruby_version = Gem::Requirement.new(">= 2.6.0")
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/ruby/rbs_json_schema"
@@ -25,6 +25,6 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency "rbs", ">=1.5.0"
+  spec.add_runtime_dependency "rbs", ">=1.8.0"
   spec.add_runtime_dependency "activesupport", ">=5.0.0"
 end
