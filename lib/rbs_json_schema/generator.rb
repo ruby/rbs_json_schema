@@ -163,21 +163,13 @@ module RBSJsonSchema
           types: all_of.map { |defn| translate_type(uri, defn) },
           location: nil
         )
+      when any_of = schema["anyOf"]
+        RBS::Types::Union.new(
+          types: any_of.map { |defn| translate_type(uri, defn) },
+          location: nil
+        )
       when ty = schema["type"]
-        case ty
-        when "integer"
-          RBS::BuiltinNames::Integer.instance_type
-        when "number"
-          RBS::BuiltinNames::Numeric.instance_type
-        when "string"
-          RBS::BuiltinNames::String.instance_type
-        when "boolean"
-          RBS::Types::Bases::Bool.new(location: nil)
-        when "null"
-          RBS::Types::Bases::Nil.new(location: nil)
-        else
-          raise ValidationError.new(message: "Invalid JSON Schema: type: #{ty}")
-        end
+        convert_type(ty)
       when ref = schema["$ref"]
         ref_uri =
           begin
@@ -200,6 +192,28 @@ module RBSJsonSchema
         )
       else
         raise ValidationError.new(message: "Invalid JSON Schema: #{schema.keys.join(", ")}")
+      end
+    end
+
+    def convert_type(type)
+      case type
+      when "integer"
+        RBS::BuiltinNames::Integer.instance_type
+      when "number"
+        RBS::BuiltinNames::Numeric.instance_type
+      when "string"
+        RBS::BuiltinNames::String.instance_type
+      when "boolean"
+        RBS::Types::Bases::Bool.new(location: nil)
+      when "null"
+        RBS::Types::Bases::Nil.new(location: nil)
+      when Array
+        RBS::Types::Union.new(
+          types: type.map { |defn| convert_type(defn) },
+          location: nil
+        )
+      else
+        raise ValidationError.new(message: "Invalid JSON Schema: type: #{type}")
       end
     end
 
